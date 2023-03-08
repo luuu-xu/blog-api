@@ -2,13 +2,13 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-const CommentSchema = require('./comment').CommentSchema;
+const { CommentSchema } = require('./comment');
 
 const PostSchema = new Schema({
   title: { type: String, required: true },
   text: { type: String, required: true },
   timestamp: { type: Date, default: Date.now },
-  is_published: {type: Boolean, required: true },
+  is_published: {type: Boolean, default: false },
   comments: [CommentSchema],
 });
 
