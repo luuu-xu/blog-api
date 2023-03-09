@@ -26,6 +26,10 @@ exports.post_create_post = [
     .trim()
     .notEmpty()
     .escape(),
+  body('is_published', 'is_published must be boolean.')
+    .trim()
+    .isBoolean()
+    .escape(),
   
   // Process request after validation and sanitization.
   (req, res, next) => {
@@ -46,6 +50,7 @@ exports.post_create_post = [
     const post = new Post({
       title: req.body.title,
       text: req.body.text,
+      is_published: req.body.is_published,
     });
     post.save()
       .then(() => res.status(200).json({
@@ -88,6 +93,10 @@ exports.post_update_put = [
     .trim()
     .notEmpty()
     .escape(),
+  body('is_published', 'is_published must be boolean.')
+    .trim()
+    .isBoolean()
+    .escape(),
   
   // Process request after validation and sanitization.
   (req, res, next) => {
@@ -108,6 +117,7 @@ exports.post_update_put = [
     const post = new Post({
       title: req.body.title,
       text: req.body.text,
+      is_published: req.body.is_published,
       _id: req.params.postid,
     });
 
