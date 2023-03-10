@@ -160,7 +160,7 @@ exports.comment_update_put = [
       return;
     } else {
       // Comment found, update the record.
-      found_comment.title = req.body.title;
+      found_comment.name = req.body.name;
       found_comment.text = req.body.text;
 
       await post.save()

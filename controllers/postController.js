@@ -114,15 +114,19 @@ exports.post_update_put = [
     }
     
     // Data is valid, create an Post object with sanitized data.
-    const post = new Post({
+    // const post = new Post({
+    //   title: req.body.title,
+    //   text: req.body.text,
+    //   is_published: req.body.is_published,
+    //   _id: req.params.postid,
+    // });
+
+    Post.findByIdAndUpdate(req.params.postid, {
       title: req.body.title,
       text: req.body.text,
       is_published: req.body.is_published,
-      _id: req.params.postid,
-    });
-
-    Post.findByIdAndUpdate(req.params.postid, post)
-      .then(() => {
+    })
+      .then((post) => {
         // Post found, update it.
         res.status(200).json({
           message: 'Post updated successfully.',
