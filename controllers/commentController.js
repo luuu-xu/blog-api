@@ -1,6 +1,7 @@
 const Post = require('../models/post');
 const { Comment } = require('../models/comment');
 const { body, validationResult } = require('express-validator');
+const passport = require('passport');
 
 // Display a list of comments under one specific post.
 exports.comment_list_get = (req, res, next) => {
@@ -25,6 +26,9 @@ exports.comment_list_get = (req, res, next) => {
 
 // Handle for creating a comment under one specific post.
 exports.comment_create_post = [
+  // Authenticate the token.
+  passport.authenticate('jwt', {session: false}),
+  
   // Validate and sanitize data fields.
   body('text', 'Text is required.')
     .trim()
@@ -115,6 +119,9 @@ exports.comment_get = (req, res, next) => {
 
 // Handle for updating a comment under a post.
 exports.comment_update_put = [
+  // Authenticate the token.
+  passport.authenticate('jwt', {session: false}),
+
   // Validate and sanitize data fields.
   body('text', 'Text is required.')
     .trim()
@@ -180,39 +187,44 @@ exports.comment_update_put = [
 ];
 
 // Handle for deleting a comment under a post.
-exports.comment_delete_delete = (req, res, next) => {
-  // Find the post with postid.
-  const found_post = Post.findById(req.params.postid)
-  .then((found_post) => {
-    // Find the comment with commentid.
-    const comment = found_post.comments.id(req.params.commentid);
+exports.comment_delete_delete = [
+  // Authenticate the token.
+  passport.authenticate('jwt', {session: false}),
 
-    if (comment == null) {
-      // Comment is not found.
-      res.status(404).json({
-        error: 'Comment not found.',
-      });
-    } else {
-      // Comment found, delete the comment.
-      comment.deleteOne();
-      found_post.save()
-        .then(() => {
-          res.status(200).json({
-            message: 'Comment deleted successfully.',
-          });
-        })
-        .catch((err) => {
-          res.status(502).json({
-            error: 'Error deleting comment.',
-            err,
+  (req, res, next) => {
+    // Find the post with postid.
+    const found_post = Post.findById(req.params.postid)
+    .then((found_post) => {
+      // Find the comment with commentid.
+      const comment = found_post.comments.id(req.params.commentid);
+
+      if (comment == null) {
+        // Comment is not found.
+        res.status(404).json({
+          error: 'Comment not found.',
+        });
+      } else {
+        // Comment found, delete the comment.
+        comment.deleteOne();
+        found_post.save()
+          .then(() => {
+            res.status(200).json({
+              message: 'Comment deleted successfully.',
+            });
           })
-        })
-      };
-  })
-  .catch((err) => {
-    res.status(404).json({
-      error: 'Post not found.',
-      err,
+          .catch((err) => {
+            res.status(502).json({
+              error: 'Error deleting comment.',
+              err,
+            })
+          })
+        };
+    })
+    .catch((err) => {
+      res.status(404).json({
+        error: 'Post not found.',
+        err,
+      });
     });
-  });
-}
+  },
+];
