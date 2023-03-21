@@ -10,12 +10,16 @@ require('dotenv').config();
 var indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
 const apiRouter = require('./routes/api');
+const compression = require('compression');
+const helmet = require('helmet');
 
 var app = express();
 
+app.use(helmet());
+
 // mongoose and MongoDB setup
 mongoose.set('strictQuery', false);
-const mongoDB = 'mongodb+srv://admin:admin@cluster0.k3yb1rf.mongodb.net/?retryWrites=true&w=majority';
+const mongoDB = process.env.MONGODB_URL;
 main().catch(err => console.log(err));
 async function main() {
   await mongoose.connect(mongoDB);
@@ -36,8 +40,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // CORS setup
 app.use(cors({
-  origin: 'http://localhost:3001',
+  origin: '*',
 }));
+
+// Compression setup
+app.use(compression());
 
 // Routers
 app.use('/', indexRouter);
