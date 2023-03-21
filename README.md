@@ -1,8 +1,10 @@
-# Blog API
+# REST Blog API
 
-This is a simple blog API created with Node.js and Express.
-The API allows users to perform CRUD (create, read, update, delete) operations on blog posts and comments.
-It also includes JWT authentication with Passport.js.
+- This is a simple blog API created with Node.js and Express.
+- The API allows users to perform CRUD (create, read, update, delete) operations on blog posts and comments.
+- It also includes JWT authentication with Passport.js.
+- See the blog website with published posts built with Next.js: [Blog NextJS](https://github.com/luuu-xu/blog-nextjs).
+- There is also a content management system too: [Blog CMS](https://github.com/luuu-xu/blog-cms).
 
 ## Getting Started
 To get started with the API, follow these steps:
